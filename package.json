@@ -1,0 +1,20 @@
+{
+  "name": "SlackBot",
+  "version": "0.0.0",
+  "description": "My first Slack Bot!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sridhar Swamy",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/client": "^3.6.0",
+    "async": "^2.0.1",
+    "bluebird": "^3.2.2",
+    "deasync": "^0.1.8",
+    "mongodb": "^2.2.10",
+    "parse-link-header": "^0.4.1",
+    "request": "^2.67.0"
+  }
+}
