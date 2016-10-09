@@ -13,7 +13,6 @@
     "async": "^2.0.1",
     "bluebird": "^3.2.2",
     "deasync": "^0.1.8",
-    "mongodb": "^2.2.10",
     "parse-link-header": "^0.4.1",
     "request": "^2.67.0"
   }
