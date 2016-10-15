@@ -14,6 +14,9 @@
     "bluebird": "^3.2.2",
     "deasync": "^0.1.8",
     "parse-link-header": "^0.4.1",
+    "priorityqueue": "^0.2.0",
+    "redis": "^2.6.2",
+    "redis-server": "0.0.3",
     "request": "^2.67.0"
   }
 }
