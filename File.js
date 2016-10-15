@@ -109,11 +109,10 @@ class UserCommitTime {
 	}
 }
 
-
+/*
 var v1 = new File('Bot.js');
 var v2 = new File('File.js');
 
-v1.addCommit('Sridhar','2016-10-06T16:45:56Z');
 v1.addCommit('Sridhar','2016-10-06T17:23:12Z');
 v1.addCommit('Sridhar','2016-10-08T17:26:33Z');
 
@@ -132,3 +131,7 @@ v1.addCommit('Akash','2016-10-10T23:11:49Z');
 
 v1.getTopNCommitters(4);
 v1.getRecentNCommitters(4);
+*/
+
+
+module.exports = File;
