@@ -15,8 +15,15 @@ class File {
 	}
 
 	// Returns the user who have contributed to the file and their commit counts
-	getCommitSummary() {
-		return this.committerCounts;
+	getCommitSummary(command, count) {
+		var summary = "";
+		if(command=="top"){
+			summary = this.getTopNCommitters(count);
+		}
+		else {
+			summary = this.getRecentNCommitters(count);
+		}
+		return summary;
 	}
 
 	// Adds a commit to the File
@@ -45,9 +52,9 @@ class File {
 
 	// Prints out the n top committers of the file
 	getTopNCommitters(n) {
-		console.log();
-		console.log('Top ' + n + ' committers for the file ' + this.name + ' are as follows:');
-		console.log('===========================================================================');
+		var result = "";
+		result += 'Top ' + n + ' committers for the file ' + this.name + ' are as follows:\n';
+		result += '===========================================================================\n';
 
 		let pq = new PriorityQueue({
    			comparator: (a, b)=>
@@ -61,17 +68,17 @@ class File {
 		var j = 0;
 		while(pq.top() != undefined && j < n){
 			var user = pq.pop();
-			console.log(user.name + ': ' + user.commits +' commits');
+			result += user.name + ': ' + user.commits +' commits \n';
 			j++;
 		}
-		console.log();
+		return result;
 	}
 
 	// Prints out n most recent committers of the file
 	getRecentNCommitters(n) {
-		console.log();
-		console.log('Recent ' + n + ' committers for the file ' + this.name + ' are as follows:');
-		console.log('===========================================================================');
+		var result = "";
+		result += 'Recent ' + n + ' committers for the file ' + this.name + ' are as follows:\n';
+		result += '===========================================================================\n';
 
 		let pq = new PriorityQueue({
    			comparator: (a, b)=>
@@ -85,10 +92,10 @@ class File {
 		var j = 0;
 		while(pq.top()!= undefined && j < n){
 			var user = pq.pop();
-			console.log(user.name + ': ' + new Date(user.commitTime));
+			result += user.name + ': ' + new Date(user.commitTime) + '\n';
 			j++;
 		}
-		console.log();
+		return result;
 	}
 
 }
