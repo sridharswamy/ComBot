@@ -9,7 +9,7 @@ function responseParser (filePath, callback){
 
 	for(var commit1 in commit_data){
 		var committer_email = commit_data[commit1].commit.committer.email;
-		var committer_username=commit_data[commit1].author.login;
+		var committer_username=commit_data[commit1].committer.login;
 		var commit_date = commit_data[commit1].commit.committer.date;
 		var files = commit_data[commit1].files;
 		console.log(committer_email);

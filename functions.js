@@ -83,6 +83,7 @@ function getCompany(userName){
 			          "Authorization": githubToken
 			       }
 	};
+	console.log(urlRoot + '/users/' + userName);
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
 			//console.log("BODY"+body);
