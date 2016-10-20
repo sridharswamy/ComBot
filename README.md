@@ -56,3 +56,28 @@ User will specify the filename that he/she wishes to query [S1]. Bot generates a
 | Subflow      | 0            |  Fetching Repository commits (Precondition)
 | Bot Implementation| Complete    | Slack setup and bot interaction
 |              | Complete    | Fetch commit history
+
+
+#####Week 2
+| Deliverable   | Item/Status   |  Issues/Tasks
+| ------------- | ------------  |  ------------
+| Use Case      | Get Top and Recent N committers | &nbsp;
+| Subflow           | 1 / Complete     |  Get Top N committers
+| Subflow           | 2 / In progress |  Get Recent N committers
+| Bot Implementation| Complete    | Implementation of Bot and File classes
+| | Complete    | Priority Queue implementation
+| |  Bot interaction for file fetch | #1
+| | Retrieving list of commits responses |#4
+| Selenium Testing | Creating Test stub file | StaleElementReferenceException
+
+#####Week 3
+| Deliverable   | Item/Status   |  Issues/Tasks
+| ------------- | ------------  |  ------------
+| Use Case      | Get company-wise contributors | &nbsp;
+| Subflow      | 3 / Complete     | Make API calls based on login IDs   
+| Mocking | Complete   | Used Nock to implement Mocking|
+| Bot Implementation | Complete   | Implemented File class
+|  | Complete   | #2, #3
+| Selenium Testing | Complete | 2 paths for each test case
+
+
