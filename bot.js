@@ -68,8 +68,8 @@ class Bot {
 
 		let channel = this.slack.dataStore.getChannelGroupOrDMById(message.channel);
 		if(message.text) {
-		    let msgText = message.text.toLowerCase();
-
+		    //let msgText = message.text.toLowerCase();
+		    let msgText=message.text;
 		    if(/(hello|hi|hey) (bot|sridharbot)/g.test(msgText)) {
 		      this.slack.sendMessage('Hello to you too, ' + messageSender.name + '! How can I help you?\n I understand the following commands: \n 1. *fetch* [GitHub repository link] \n 2. *file* [Filename] [recent/top] [number]', channel.id);
 		    }
@@ -111,19 +111,26 @@ class Bot {
 					}).then(function(finalresponse){
 					console.log("Final return :---"+Object.keys(finalresponse));
 					console.log(finalresponse);
+					parser.responseParser(finalresponse,function(response){
+						fileMappings=response;
+
+					})
 				});
 			})
 				//slack.sendMessage('Commit: ' + commits, channel.id);
 			}
 
 			if(/file/g.test(msgText)) {
+				console.log(fileMappings);
 				if(Object.keys(fileMappings).length === 0) {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
 				else {
 					var values = msgText.split(" ");
 					var fileName = values[1];
+					console.log(fileName);
 					var query = values[2];
+					console.log(fileMappings[fileName]);
 					var count = values[3];
 					if(fileMappings[fileName]) {
 						this.slack.sendMessage(fileMappings[fileName].getCommitSummary(query, count), channel.id);

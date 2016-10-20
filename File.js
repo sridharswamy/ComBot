@@ -54,7 +54,7 @@ class File {
 	getTopNCommitters(n) {
 		var result = "";
 		result += 'Top ' + n + ' committers for the file ' + this.name + ' are as follows:\n';
-		result += '===========================================================================\n';
+		result += '========================================================================\n';
 
 		let pq = new PriorityQueue({
    			comparator: (a, b)=>
@@ -78,7 +78,7 @@ class File {
 	getRecentNCommitters(n) {
 		var result = "";
 		result += 'Recent ' + n + ' committers for the file ' + this.name + ' are as follows:\n';
-		result += '===========================================================================\n';
+		result += '========================================================================\n';
 
 		let pq = new PriorityQueue({
    			comparator: (a, b)=>
