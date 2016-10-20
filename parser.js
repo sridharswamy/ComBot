@@ -9,9 +9,10 @@ function responseParser (filePath, callback){
 
 	for(var commit1 in commit_data){
 		var committer_email = commit_data[commit1].commit.committer.email;
+		var committer_username=commit_data[commit1].author.login;
 		var commit_date = commit_data[commit1].commit.committer.date;
 		var files = commit_data[commit1].files;
-		//console.log(committer_email);
+		console.log(committer_email);
 
 
 		for (var i in files) {
@@ -22,7 +23,8 @@ function responseParser (filePath, callback){
 			}
 
 			var fobj = fileMap[fname];
-			fobj.addCommit(committer_email, commit_date);
+			console.log("committer_username"+committer_username);
+			fobj.addCommit(committer_email, commit_date, committer_username);
 		}
 	}
 	return callback(fileMap);

@@ -169,6 +169,7 @@ class Bot {
 				else {
 					var values = msgText.split(" ");
 					var fileName = values[1];
+					console.log(values[1]);
 					var companyContributionsCount={};
 
 					if(fileMappings[fileName]){
@@ -181,10 +182,16 @@ class Bot {
 								companyContributionsCount[company]=0;
 							}
 							companyContributionsCount[company]+=count;
+							console.log("username"+username+" "+"company"+company+" "+count);
 						}
 					}
 					console.log("Company mappings"+companyMappings);
 					console.log(companyContributionsCount);
+					var resultstring="";
+					for(var company in companyContributionsCount){
+						resultstring=resultstring+"Company :"+company+" count "+companyContributionsCount[company]+"\n";
+					}
+					this.slack.sendMessage(resultstring,channel.id);
 				}
 				
 			}
