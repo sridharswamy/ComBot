@@ -31,7 +31,6 @@ User will specify the filename that he/she wishes to query [S1]. Bot performs a 
 **4 Alternative Flows**  
 [E1] There are no commits in the repository.  
 
-
 ###Use Case 3: Retrieving the company wise contribution count for an open source project repository  
 **1 Preconditions**  
 User must have fetched the repository’s commit history using the fetch command.  
@@ -47,3 +46,13 @@ User will specify the filename that he/she wishes to query [S1]. Bot generates a
 **4 Alternative Flows**  
 [E1] There are no commits in the repository.
 
+
+## Task Tracking
+##### Week 1
+
+| Deliverable   | Item/Status   |  Issues/Tasks
+| ------------- | ------------  |  ------------
+| Use Case      | Get GitHub commit history | &nbsp;
+| Subflow      | 0            |  Fetching Repository commits (Precondition)
+| Bot Implementation| Complete    | Slack setup and bot interaction
+|              | Complete    | Fetch commit history
