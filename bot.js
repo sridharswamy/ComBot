@@ -19,6 +19,7 @@ var githubToken = "token " + process.env.GITHUB_API_TOKEN;
 var userId = "akshaynayak";
 var urlRoot = "https://api.github.com";
 var fileMappings = {};
+var companyMappings = {};
 var data = require('./mock0.json');
 var data1 = require('./mock.json');
 
@@ -83,7 +84,6 @@ class Bot {
 	  		    var match = re.exec(msgText);
 			    var repoName = "";
 				var username = "";
-
 				if(match == null) {
 					this.slack.sendMessage('The URL you entered is invalid. Please enter valid GitHub URL!', channel.id);
 				}
@@ -93,6 +93,28 @@ class Bot {
 				  repoName = match[7];
 				  this.slack.sendMessage("Fetching commit history from the repo *"+repoName+"*. I will notify you as soon as I'm done!", channel.id);
 				}
+
+				var users=[];
+				functions.getUsers(username,repoName).then(function (obj) {
+					//console.log(obj[1])
+					for( var i in obj)
+					{
+						var name = obj[i].login;
+						users.push(name);
+					} 
+					return users;
+				}).then(function(users){
+					Promise.map(users,function(user){
+						functions.getCompany(user).then(function(company){
+							if(company){
+								console.log("company"+company);
+							companyMappings[user]=company;
+						}
+						})
+					})
+				});
+
+
 
 				var commits = []
 
@@ -106,13 +128,9 @@ class Bot {
 				var listOfCommits = [];
 				var finalresponse=[];
 				functions.getCommits(username, repoName, listOfCommits).then(function (shaList) {
-					console.log("Printing response inside callback" +shaList);
-					//console.log("cheking if array"+shaList[0]);
 					Promise.map(shaList,function(sha){
 						return functions.callRequest(username,repoName,sha)
 					}).then(function(finalresponse){
-					console.log("Final return :---"+Object.keys(finalresponse));
-					console.log(finalresponse);
 					parser.responseParser(finalresponse,function(response){
 						fileMappings=response;
 
@@ -123,16 +141,15 @@ class Bot {
 			}
 
 			if(/file/g.test(msgText)) {
-				console.log(fileMappings);
 				if(Object.keys(fileMappings).length === 0) {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
 				else {
 					var values = msgText.split(" ");
 					var fileName = values[1];
-					console.log(fileName);
+					//console.log(fileName);
 					var query = values[2];
-					console.log(fileMappings[fileName]);
+					//console.log(fileMappings[fileName]);
 					var count = values[3];
 					if(fileMappings[fileName]) {
 						this.slack.sendMessage(fileMappings[fileName].getCommitSummary(query, count), channel.id);
@@ -142,6 +159,10 @@ class Bot {
 					}
 				}
 			}
+
+			
+
+
 		}
 	}
 }

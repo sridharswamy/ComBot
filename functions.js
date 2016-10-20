@@ -42,7 +42,6 @@ function callRequest( userName, repoName,sha) {
 			          "Authorization": githubToken
 			       }
 	};
-	console.log("url: "+ urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha);
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
 			//console.log("BODY"+body);
@@ -52,5 +51,49 @@ function callRequest( userName, repoName,sha) {
   	});
 }
 
+function getUsers(userName,repoName){
+	var commitOptions = {
+			        url: urlRoot + '/repos/' + userName + '/' + repoName + '/contributors',
+			        method: 'GET',
+			        headers: {        
+			          "User-Agent": "EnableIssues",
+			          "content-type": "application/json",
+			          "Authorization": githubToken
+			       }
+	};
+  	return new Promise(function (resolve, reject) {
+		request(commitOptions, function (error, response, body) {
+			//console.log("BODY"+body);
+			var commitObj = JSON.parse(body);
+			//console.log(commitObj);
+		    resolve(commitObj);
+  		});
+  	});
+
+
+}
+
+function getCompany(userName){
+	var commitOptions = {
+			        url: urlRoot + '/users/' + userName,
+			        method: 'GET',
+			        headers: {        
+			          "User-Agent": "EnableIssues",
+			          "content-type": "application/json",
+			          "Authorization": githubToken
+			       }
+	};
+  	return new Promise(function (resolve, reject) {
+		request(commitOptions, function (error, response, body) {
+			//console.log("BODY"+body);
+			var commitObj = JSON.parse(body);
+			//console.log(commitObj);
+		    resolve(commitObj.company);
+  		});
+  	});
+
+}
+exports.getCompany = getCompany;
+exports.getUsers = getUsers;
 exports.callRequest = callRequest;
 exports.getCommits = getCommits;

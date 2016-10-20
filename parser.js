@@ -11,12 +11,12 @@ function responseParser (filePath, callback){
 		var committer_email = commit_data[commit1].commit.committer.email;
 		var commit_date = commit_data[commit1].commit.committer.date;
 		var files = commit_data[commit1].files;
-		console.log(committer_email);
+		//console.log(committer_email);
 
 
 		for (var i in files) {
 			var fname = files[i].filename;
-			console.log("Key:::::::::::"+fname);
+			//console.log("Key:::::::::::"+fname);
 			if(!fileMap.hasOwnProperty(fname)){
 				fileMap[fname] = new File(fname);
 			}
