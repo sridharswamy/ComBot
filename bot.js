@@ -14,7 +14,6 @@ var nock = require('nock');
 let functions=require('./functions.js');
 
 let parser = require('./parser.js');
-//let file=require('./File.js');
 
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
 var userId = "akshaynayak";
@@ -42,7 +41,7 @@ class Bot {
 		});
 
 		this.slack.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, () => {
-		  let user = this.slack.dataStore.getUserById(this.slack.activeUserId)
+		  let user = this.slack.dataStore.getUserById(this.slack.activeUserId);
 		  let team = this.slack.dataStore.getTeamById(this.slack.activeTeamId);
 		  this.name = user.name;
 		  console.log(`Connected to ${team.name} as ${user.name}`);
@@ -72,13 +71,12 @@ class Bot {
 
 		let channel = this.slack.dataStore.getChannelGroupOrDMById(message.channel);
 		if(message.text) {
-		    //let msgText = message.text.toLowerCase();
 		    let msgText=message.text;
 		    if(/(hello|hi|hey) (bot|sridharbot)/g.test(msgText)) {
-		      this.slack.sendMessage('Hello to you too, ' + messageSender.name + '! How can I help you?\n I understand the following commands: \n 1. *fetch* [GitHub repository link] \n 2. *file* [Filename] [recent/top] [number]', channel.id);
+		      this.slack.sendMessage('Hello to you too, ' + messageSender.name + '! How can I help you?\n I understand the following commands: \n 1. *fetch* [GitHub repository link] \n 2. *file* [Filename] [recent/top] [number] \n 3. *orgContributors* [Filename]', channel.id);
 		    }
 
-		    if(/fetch/g.test(msgText)) {
+		    else if(/fetch/g.test(msgText)) {
 			    let dm = this.slack.dataStore.getDMByName(messageSender.name);
 		        var re = /fetch <((https|http)\:\/\/)?((www.)?(github.com)){1}\/([\w+._]+)\/([\w+-._]+)>/g;
 
@@ -97,7 +95,6 @@ class Bot {
 
 				var users=[];
 				functions.getUsers(username,repoName).then(function (obj) {
-					//console.log(obj[1])
 					for( var i in obj)
 					{
 						var name = obj[i].login;
@@ -108,49 +105,45 @@ class Bot {
 					Promise.map(users,function(user){
 						functions.getCompany(user).then(function(company){
 							if(company){
-								console.log("company"+company);
-							companyMappings[user]=company;
-						}
-						})
-					})
+								companyMappings[user]=company;
+							}
+						});
+					});
 				});
-
-
-
-				var commits = []
 
 				//var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
 				//	.reply(200, JSON.stringify(data));
 
 				var sha = data[0].sha;
-			    
 				//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
 				//		.reply(200, JSON.stringify(data1));
+
 				var listOfCommits = [];
 				var finalresponse=[];
 				functions.getCommits(username, repoName, listOfCommits).then(function (shaList) {
 					Promise.map(shaList,function(sha){
 						return functions.callRequest(username,repoName,sha)
 					}).then(function(finalresponse){
-					parser.responseParser(finalresponse,function(response){
-						fileMappings=response;
-
-					})
+						parser.responseParser(finalresponse,function(response){
+							fileMappings = response;
+						});
+					});
 				});
-			})
-				//slack.sendMessage('Commit: ' + commits, channel.id);
+				this.slack.sendMessage("Fetching successfully completed!", channel.id);
 			}
 
-			if(/file/g.test(msgText)) {
+			else if(/file/g.test(msgText)) {
 				if(Object.keys(fileMappings).length === 0) {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
 				else {
 					var values = msgText.split(" ");
+					if(values.length != 4) {
+						this.slack.sendMessage("Invalid command format!", channel.id);
+						return;
+					}
 					var fileName = values[1];
-					//console.log(fileName);
 					var query = values[2];
-					//console.log(fileMappings[fileName]);
 					var count = values[3];
 					if(fileMappings[fileName]) {
 						this.slack.sendMessage(fileMappings[fileName].getCommitSummary(query, count), channel.id);
@@ -160,9 +153,8 @@ class Bot {
 					}
 				}
 			}
-
 			
-			if(/orgContributors/g.test(msgText)){
+			else if(/orgContributors/g.test(msgText)){
 				if(Object.keys(fileMappings).length === 0) {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
@@ -184,25 +176,20 @@ class Bot {
 							companyContributionsCount[company]+=count;
 							console.log("username"+username+" "+"company"+company+" "+count);
 						}
+						console.log("Company mappings"+companyMappings);
+						console.log(companyContributionsCount);
+						var resultstring="";
+						for(var company in companyContributionsCount){
+							resultstring=resultstring+"Company :"+company+" count "+companyContributionsCount[company]+"\n";
+						}
+						this.slack.sendMessage(resultstring,channel.id);
 					}
-					console.log("Company mappings"+companyMappings);
-					console.log(companyContributionsCount);
-					var resultstring="";
-					for(var company in companyContributionsCount){
-						resultstring=resultstring+"Company :"+company+" count "+companyContributionsCount[company]+"\n";
+					else {
+						this.slack.sendMessage("Sorry, I couldn't locate that file!",channel.id);
 					}
-					this.slack.sendMessage(resultstring,channel.id);
 				}
-				
 			}
-
-
-
 		}
 	}
 }
-
-
-
-
 module.exports=Bot;
