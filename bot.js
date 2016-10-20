@@ -94,19 +94,35 @@ class Bot {
 
 				var commits = []
 
-				var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
-					.reply(200, JSON.stringify(data));
+				//var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
+				//	.reply(200, JSON.stringify(data));
 
 				var sha = data[0].sha;
-			
-				var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
-						.reply(200, JSON.stringify(data1));
-
-				getCommits(username, repoName, commits).then(function (response) {
-					console.log("Printing response inside callback" +response);
-					console.log(response);
-					commits = response;
+			    
+				//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
+				//		.reply(200, JSON.stringify(data1));
+				var listOfCommits = [];
+				var finalresponse=[];
+				getCommits(username, repoName, listOfCommits).then(function (shaList) {
+					console.log("Printing response inside callback" +shaList);
+					//console.log("cheking if array"+shaList[0]);
+					Promise.map(shaList,function(sha){
+						return callRequest(username,repoName,sha)
+					}).then(function(finalresponse){
+					console.log("Final return :---"+Object.keys(finalresponse));
+					console.log(finalresponse);
 				});
+					/*{
+						//finalList.push(callRequest(shaList[i]));
+						callRequest(username,repoName,shaList[i]).then(function(singlecommit){
+							finalresponse.push(singlecommit);
+						})
+					} 
+					*/
+					//callRequest(shaList);
+					//console.log(response);
+					//commits = response;
+				})
 				//slack.sendMessage('Commit: ' + commits, channel.id);
 			}
 
@@ -131,9 +147,12 @@ class Bot {
 	}
 }
 
-function getCommits(userName, repoName, commits)
-{
-	var listOfCommits = [];
+
+
+
+function getCommits(userName, repoName, lisOfCommits)
+{	
+	var shaList=[]
     var options = {
 	    url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits',
 	    method: 'GET',
@@ -151,31 +170,36 @@ function getCommits(userName, repoName, commits)
 		    for(var i = 0; i < obj.length; i++)
 		    {
 		  	    var sha = obj[i].sha;
-		    	var commitOptions = {
+                shaList.push(sha);
+
+		      /*	callRequest(commitOptions, userName, repoName).then(function (commitObj) {
+		      		listOfCommits.push(commitObj);
+   					console.log("LIST OF COMMITS AFTER PUSH" +listOfCommits);
+					resolve(listOfCommits);
+		      	}); */
+			}
+			resolve(shaList);
+		});
+	});		
+}
+
+function callRequest( userName, repoName,sha) {
+  // Send a http request to url and specify a callback that will be called upon its return.
+
+
+		  var commitOptions = {
 			        url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha,
 			        method: 'GET',
 			        headers: {        
 			          "User-Agent": "EnableIssues",
 			          "content-type": "application/json",
 			          "Authorization": githubToken
-			        }
-		      	};
-
-		      	callRequest(commitOptions, userName, repoName).then(function (commitObj) {
-		      		listOfCommits.push(commitObj);
-   					console.log("LIST OF COMMITS AFTER PUSH" +listOfCommits);
-					resolve(listOfCommits);
-		      	});
-			}
-		});
-	});		
-}
-
-function callRequest(commitOptions, userName, repoName) {
-  // Send a http request to url and specify a callback that will be called upon its return.
-
+			       }
+	};
+	console.log("url: "+ urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha);
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
+			//console.log("BODY"+body);
 			var commitObj = JSON.parse(body);
 		    console.log("INSIDE PROMISE commit obj"+commitObj);
 		    // for( var i = 0; i < commitObj.files.length; i++ ) {
@@ -186,11 +210,19 @@ function callRequest(commitOptions, userName, repoName) {
   		});
   	});
   	console.log("COMMITS INSIDE PROMISE"+commits);
-    resolve(commits);
+   // resolve(commits);
 
 
 
 
 }
+
+/*
+function getCommits(userName, repoName, commits){
+
+}
+
+*/
+
 
 module.exports=Bot;
