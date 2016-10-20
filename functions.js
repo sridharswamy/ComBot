@@ -61,12 +61,10 @@ function getUsers(userName,repoName){
 			          "Authorization": githubToken
 			       }
 	};
-	console.log(urlRoot + '/repos/' + userName + '/' + repoName + '/contributors');
+	//console.log(urlRoot + '/repos/' + userName + '/' + repoName + '/contributors');
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
-			//console.log("BODY"+body);
 			var commitObj = JSON.parse(body);
-			console.log(commitObj);
 			//console.log(commitObj);
 		    resolve(commitObj);
   		});

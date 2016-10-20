@@ -83,53 +83,51 @@ class Bot {
 	  		    var match = re.exec(msgText);
 			    var repoName = "";
 				var username = "";
-				if(match == null) {
-					this.slack.sendMessage('The URL you entered is invalid. Please enter valid GitHub URL!', channel.id);
-				}
-
-				else {
+				if(match != null) {
 				  username = match[6];
 				  repoName = match[7];
 				  this.slack.sendMessage("Fetching commit history from the repo *"+repoName+"*. I will notify you as soon as I'm done!", channel.id);
+					var users=[];
+					functions.getUsers(username,repoName).then(function (obj) {
+						for( var i in obj)
+						{
+							var name = obj[i].login;
+							users.push(name);
+						} 
+						return users;
+					}).then(function(users){
+						Promise.map(users,function(user){
+							functions.getCompany(user).then(function(company){
+								if(company){
+									companyMappings[user]=company;
+								}
+							});
+						});
+					});
+
+					//var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
+					//	.reply(200, JSON.stringify(data));
+					//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
+					//		.reply(200, JSON.stringify(data1));
+
+					var listOfCommits = [];
+					var finalresponse=[];
+					functions.getCommits(username, repoName, listOfCommits).then(function (shaList) {
+						Promise.map(shaList,function(sha){
+							return functions.callRequest(username,repoName,sha)
+						}).then(function(finalresponse){
+							parser.responseParser(finalresponse,function(response){
+								fileMappings = response;
+							});
+						});
+					});
+					this.slack.sendMessage("Fetching successfully completed!", channel.id);
+				}
+				else {
+					this.slack.sendMessage('The URL you entered is invalid. Please enter valid GitHub URL!', channel.id);
 				}
 
-				var users=[];
-				functions.getUsers(username,repoName).then(function (obj) {
-					for( var i in obj)
-					{
-						var name = obj[i].login;
-						users.push(name);
-					} 
-					return users;
-				}).then(function(users){
-					Promise.map(users,function(user){
-						functions.getCompany(user).then(function(company){
-							if(company){
-								companyMappings[user]=company;
-							}
-						});
-					});
-				});
-
-				//var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
-				//	.reply(200, JSON.stringify(data));
-				//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
-				//		.reply(200, JSON.stringify(data1));
-
-				var listOfCommits = [];
-				var finalresponse=[];
-				functions.getCommits(username, repoName, listOfCommits).then(function (shaList) {
-					Promise.map(shaList,function(sha){
-						return functions.callRequest(username,repoName,sha)
-					}).then(function(finalresponse){
-						parser.responseParser(finalresponse,function(response){
-							fileMappings = response;
-						});
-					});
-				});
-				this.slack.sendMessage("Fetching successfully completed!", channel.id);
 			}
-
 			else if(/file/g.test(msgText)) {
 				if(Object.keys(fileMappings).length === 0) {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
