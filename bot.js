@@ -12,7 +12,7 @@ var parse = require('parse-link-header');
 var jsonReader = require('jsonfile');
 var nock = require('nock');
 let functions=require('./functions.js');
-let mocking=require('./mocking.js');
+
 let parser = require('./parser.js');
 
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
@@ -20,13 +20,15 @@ var userId = "akshaynayak";
 var urlRoot = "https://api.github.com";
 var fileMappings = {};
 var companyMappings = {};
+var data = require('./mock0.json');
+var data1 = require('./mock.json');
 
 var githubapi = nock("https://api.github.com")
 
 class Bot {
 
 	constructor(opts) {
-		console.log(mocking);
+		console.log(functions);
 		let slackToken = opts.token;
 		let autoReconnect = opts.autoReconnect || true;
 		let autoMark = opts.autoMark || true;
@@ -61,7 +63,7 @@ class Bot {
   	}
 
 	messageHandler(message) {
-		// This is a call for mocking the endpoints. If mocking isnt required just comment it.
+		// CALL THIS FUNCTION ONLY FOR MOCKING ELSE COMMENT IT
 		mocking.mock();
 		let messageSender = this.slack.dataStore.getUserById(message.user);
 
@@ -115,7 +117,6 @@ class Bot {
 				//	.reply(200, JSON.stringify(data));
 
 				var sha = data[0].sha;
-
 				//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
 				//		.reply(200, JSON.stringify(data1));
 
@@ -185,17 +186,8 @@ class Bot {
 						}
 						this.slack.sendMessage(resultstring,channel.id);
 					}
-
-					console.log("Company mappings"+companyMappings);
-					console.log(companyContributionsCount);
-					var resultstring="";
-					for(var company in companyContributionsCount){
-						resultstring=resultstring+"Company :"+company+" count "+companyContributionsCount[company]+"\n";
-						console.log(resultstring+"resultstring");
-
 					else {
 						this.slack.sendMessage("Sorry, I couldn't locate that file!",channel.id);
-
 					}
 				}
 			}
