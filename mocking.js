@@ -11,24 +11,24 @@ var userSpaceGhost=require("./mockUserSpaceGhost.json");
 function mock(){
 	var mockServiceListCommits = nock("https://api.github.com")
 	  .persist() // This will persist mock interception for lifetime of program.
-	  .get("/repos/octocat/Hello-World/commits")
+	  .get("/repos/test/Hello-World/commits")
 	  .reply(200, JSON.stringify(listOfCommits));
 
 	var mockSha=listOfCommits[0].sha
 
 	var mockServiceFileData = nock("https://api.github.com")
 	  .persist() // This will persist mock interception for lifetime of program.
-	  .get("/repos/octocat/Hello-World/commits/"+mockSha)
+	  .get("/repos/test/Hello-World/commits/"+mockSha)
 	  .reply(200, JSON.stringify(fileData));
 
 	var mockContributions = nock("https://api.github.com")
 	  .persist() // This will persist mock interception for lifetime of program.
-	  .get("/repos/octocat/Hello-World/contributors")
+	  .get("/repos/test/Hello-World/contributors")
 	  .reply(200, JSON.stringify(contributors));
 
 	var mockUserOctocat = nock("https://api.github.com")
 	  .persist() // This will persist mock interception for lifetime of program.
-	  .get("/users/octocat")
+	  .get("/users/test")
 	  .reply(200, JSON.stringify(userOctocat));
 
 	var mockUserSpaceGhost = nock("https://api.github.com")
