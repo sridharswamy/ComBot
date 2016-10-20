@@ -12,7 +12,7 @@ var parse = require('parse-link-header');
 var jsonReader = require('jsonfile');
 var nock = require('nock');
 let functions=require('./functions.js');
-
+let mocking=require('./mocking.js');
 let parser = require('./parser.js');
 
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
@@ -20,8 +20,6 @@ var userId = "akshaynayak";
 var urlRoot = "https://api.github.com";
 var fileMappings = {};
 var companyMappings = {};
-var data = require('./mock0.json');
-var data1 = require('./mock.json');
 
 var githubapi = nock("https://api.github.com")
 
@@ -115,8 +113,6 @@ class Bot {
 
 				//var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
 				//	.reply(200, JSON.stringify(data));
-
-				var sha = data[0].sha;
 				//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
 				//		.reply(200, JSON.stringify(data1));
 
