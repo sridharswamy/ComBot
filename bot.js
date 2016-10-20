@@ -11,6 +11,7 @@ var Promise = require('bluebird');
 var parse = require('parse-link-header');
 var jsonReader = require('jsonfile');
 var nock = require('nock');
+let functions=require('./functions.js');
 
 let parser = require('./parser.js');
 
@@ -26,6 +27,7 @@ var githubapi = nock("https://api.github.com")
 class Bot {
 
 	constructor(opts) {
+		console.log(functions);
 		let slackToken = opts.token;
 		let autoReconnect = opts.autoReconnect || true;
 		let autoMark = opts.autoMark || true;
@@ -103,11 +105,11 @@ class Bot {
 				//		.reply(200, JSON.stringify(data1));
 				var listOfCommits = [];
 				var finalresponse=[];
-				getCommits(username, repoName, listOfCommits).then(function (shaList) {
+				functions.getCommits(username, repoName, listOfCommits).then(function (shaList) {
 					console.log("Printing response inside callback" +shaList);
 					//console.log("cheking if array"+shaList[0]);
 					Promise.map(shaList,function(sha){
-						return callRequest(username,repoName,sha)
+						return functions.callRequest(username,repoName,sha)
 					}).then(function(finalresponse){
 					console.log("Final return :---"+Object.keys(finalresponse));
 					console.log(finalresponse);
@@ -142,56 +144,6 @@ class Bot {
 			}
 		}
 	}
-}
-
-
-
-function getCommits(userName, repoName, lisOfCommits)
-{	
-	var shaList=[]
-    var options = {
-	    url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits',
-	    method: 'GET',
-	    headers: {        
-	      "User-Agent": "EnableIssues",
-	      "content-type": "application/json",
-	      "Authorization": githubToken
-   		 }
-  	};
-
-   	return new Promise(function (resolve, reject) {
-	 	request(options, function (error, response, body) 
-	  	{
-		    var obj = JSON.parse(body);
-		    for(var i = 0; i < obj.length; i++)
-		    {
-		  	    var sha = obj[i].sha;
-                shaList.push(sha);
-			}
-			resolve(shaList);
-		});
-	});		
-}
-
-function callRequest( userName, repoName,sha) {
-  // Send a http request to url and specify a callback that will be called upon its return.
-		  var commitOptions = {
-			        url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha,
-			        method: 'GET',
-			        headers: {        
-			          "User-Agent": "EnableIssues",
-			          "content-type": "application/json",
-			          "Authorization": githubToken
-			       }
-	};
-	console.log("url: "+ urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha);
-  	return new Promise(function (resolve, reject) {
-		request(commitOptions, function (error, response, body) {
-			//console.log("BODY"+body);
-			var commitObj = JSON.parse(body);
-		    resolve(commitObj);
-  		});
-  	});
 }
 
 
