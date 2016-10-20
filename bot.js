@@ -14,6 +14,7 @@ var nock = require('nock');
 let functions=require('./functions.js');
 
 let parser = require('./parser.js');
+//let file=require('./File.js');
 
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
 var userId = "akshaynayak";
@@ -161,6 +162,33 @@ class Bot {
 			}
 
 			
+			if(/orgContributors/g.test(msgText)){
+				if(Object.keys(fileMappings).length === 0) {
+					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
+				}
+				else {
+					var values = msgText.split(" ");
+					var fileName = values[1];
+					var companyContributionsCount={};
+
+					if(fileMappings[fileName]){
+						var fileObj=fileMappings[fileName];
+						for(var user_email in fileObj.committerCounts){
+							var count=fileObj.committerCounts[user_email];
+							var username=fileObj.emailToUserName[user_email];
+							var company=companyMappings[username];
+							if(!companyContributionsCount[company]){
+								companyContributionsCount[company]=0;
+							}
+							companyContributionsCount[company]+=count;
+						}
+					}
+					console.log("Company mappings"+companyMappings);
+					console.log(companyContributionsCount);
+				}
+				
+			}
+
 
 
 		}

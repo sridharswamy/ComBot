@@ -2,11 +2,15 @@
 
 const PriorityQueue = require('priorityqueue');
 
+//global variable should be used
+//var emailToUserName={};
+
 class File {
 	constructor(name) {
 	  this.name = name;
 	  this.committerCounts = {};
 	  this.committerTimes = {};
+	  this.emailToUserName={};
 	}
 
 	// Returns the name of the file
@@ -27,9 +31,12 @@ class File {
 	}
 
 	// Adds a commit to the File
-	addCommit(committer, commitTime) {
+	addCommit(committer, commitTime, committer_username) {
 		this.addCommitter(committer);
-		this.addCommitTime(committer, commitTime);	
+		this.addCommitTime(committer, commitTime);
+		if(!this.emailToUserName[committer]){
+			this.emailToUserName[committer]=committer_username;
+		}
 	}
 
 	// Adds committer details to the file commit list
