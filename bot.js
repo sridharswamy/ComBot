@@ -112,17 +112,7 @@ class Bot {
 					console.log("Final return :---"+Object.keys(finalresponse));
 					console.log(finalresponse);
 				});
-					/*{
-						//finalList.push(callRequest(shaList[i]));
-						callRequest(username,repoName,shaList[i]).then(function(singlecommit){
-							finalresponse.push(singlecommit);
-						})
-					} 
-					*/
-					//callRequest(shaList);
-					//console.log(response);
-					//commits = response;
-				})
+			})
 				//slack.sendMessage('Commit: ' + commits, channel.id);
 			}
 
@@ -149,7 +139,6 @@ class Bot {
 
 
 
-
 function getCommits(userName, repoName, lisOfCommits)
 {	
 	var shaList=[]
@@ -171,12 +160,6 @@ function getCommits(userName, repoName, lisOfCommits)
 		    {
 		  	    var sha = obj[i].sha;
                 shaList.push(sha);
-
-		      /*	callRequest(commitOptions, userName, repoName).then(function (commitObj) {
-		      		listOfCommits.push(commitObj);
-   					console.log("LIST OF COMMITS AFTER PUSH" +listOfCommits);
-					resolve(listOfCommits);
-		      	}); */
 			}
 			resolve(shaList);
 		});
@@ -185,8 +168,6 @@ function getCommits(userName, repoName, lisOfCommits)
 
 function callRequest( userName, repoName,sha) {
   // Send a http request to url and specify a callback that will be called upon its return.
-
-
 		  var commitOptions = {
 			        url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha,
 			        method: 'GET',
@@ -201,28 +182,12 @@ function callRequest( userName, repoName,sha) {
 		request(commitOptions, function (error, response, body) {
 			//console.log("BODY"+body);
 			var commitObj = JSON.parse(body);
-		    console.log("INSIDE PROMISE commit obj"+commitObj);
-		    // for( var i = 0; i < commitObj.files.length; i++ ) {
-		    //   console.log(commitObj.commit.author.name + " " + commitObj.files[i].filename);
-		    //   console.log("Kota ki mkc");
-		    // }
 		    resolve(commitObj);
   		});
   	});
-  	console.log("COMMITS INSIDE PROMISE"+commits);
-   // resolve(commits);
-
-
-
-
 }
 
-/*
-function getCommits(userName, repoName, commits){
 
-}
-
-*/
 
 
 module.exports=Bot;
