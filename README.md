@@ -46,8 +46,17 @@ User will specify the filename that he/she wishes to query [S1]. Bot generates a
 **4 Alternative Flows**  
 [E1] There are no commits in the repository.
 
+## Mocking Service Component
+The repo consists of 5 JSON files which have been used in mocking API calls to the GitHub repository. They are as follows:
+* mockContributors.json
+* mockFileData.json
+* mockListOfCommits.json
+* mockUserOctocat.json
+* mockUserSpaceGhost.json
 
 ## Task Tracking
+[Link to trello board](https://trello.com/b/jJbRJXAk/slack-bot)
+
 ##### Week 1
 
 | Deliverable   | Item/Status   |  Issues/Tasks
@@ -56,7 +65,6 @@ User will specify the filename that he/she wishes to query [S1]. Bot generates a
 | Subflow      | 0            |  Fetching Repository commits (Precondition)
 | Bot Implementation| Complete    | Slack setup and bot interaction
 |              | Complete    | Fetch commit history
-
 
 #####Week 2
 | Deliverable   | Item/Status   |  Issues/Tasks
@@ -80,4 +88,8 @@ User will specify the filename that he/she wishes to query [S1]. Bot generates a
 |  | Complete   | #2, #3
 | Selenium Testing | Complete | 2 paths for each test case
 
+## Selenium Testing
+The code for Selenium testing has been written in Java and can be found in the file BotTest.java.
 
+## Screencast
+[Slack Bot Screencast - BOT phase](https://youtu.be/M0Cck8CmSz4)
