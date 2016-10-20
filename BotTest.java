@@ -29,14 +29,14 @@ import org.junit.runners.MethodSorters;
 public class BotTest
 {
 	
-	private static String id = "sadoshi@ncsu.edu";
-	private static String pwd = "****";
+	private static String id = "test@ncsu.edu";
+	private static String pwd = "***";
 	private static WebDriver driver;
 	
 	@BeforeClass
 	public static void setUp() throws Exception 
 	{
-		
+		//go to slack and login
 		ChromeDriverManager.getInstance().setup();
 		driver = new ChromeDriver();
 		driver.get("https://seteamhq.slack.com/");
@@ -47,17 +47,17 @@ public class BotTest
 		WebElement email = driver.findElement(By.id("email"));
 		WebElement pw = driver.findElement(By.id("password"));
 		
+		//send email and password
 		email.sendKeys(id);
 		pw.sendKeys(pwd);
 		
+		//sign in
 		WebElement signin = driver.findElement(By.id("signin_btn"));
 		signin.click();
 		
 		wait.until(ExpectedConditions.titleContains("general"));
 		
 	}
-	
-	
 	
 	
 	@AfterClass
@@ -68,30 +68,31 @@ public class BotTest
 	}
 
 	
+	
 	@Test
-	public void fetch_url() throws Exception
+	public void fetch_url_invalid() throws Exception
 	{
 		
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		
+		//go to testing channel
 		driver.get("https://seteamhq.slack.com/messages/testing");
 		wait.until(ExpectedConditions.titleContains("testing"));
 
-		// Type something. F
+		// Type something to be sent
 		WebElement messageBot = driver.findElement(By.id("message-input"));
 		
 		//fetch repository details
-		messageBot.sendKeys("fetch https://github.com/siddoshi93/mockrepo ");
+		messageBot.sendKeys("fetch https://gsiddopo ");
 		messageBot.sendKeys(Keys.RETURN);
 		
 		wait.withTimeout(4, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
 		
 
 		WebElement chat = null;
-		// we get last message body
 		
-		
-		int attempts = 3;
+		// Get last message body. We try it no of times as we get StaleElementReferenceException
+		int attempts = 10;
 		while(attempts -- >0)
 		{	
 			try{
@@ -104,31 +105,179 @@ public class BotTest
 		
 		}
 		
-		//check if we get it null
+		//check if we get last message
 		assertNotNull(chat);
 		
-		//success message
-		String msg = "Fetching commit history from the repo";
+		//Failure message
+		String msg = "The URL you entered is invalid. Please enter valid GitHub URL!";
+		
+		//Reply from bot
 		String rep = chat.getText();
 		
-		//System.out.println(rep);
-		
-		// check if the message contains the success message
+		// check if the reply from bot contains the failure message
 		boolean val = rep.indexOf(msg)!=-1;
 		assertTrue(val);	
 	}
 	
+	
+	
 	@Test
-	public void recent_commit() throws Exception
+	public void invalid_filename() throws Exception
 	{
+		WebDriverWait wait = new WebDriverWait(driver, 30);	
+		
+		// get recent commits
+		WebElement messageBot = driver.findElement(By.id("message-input"));
+		messageBot.sendKeys("file saddas recent 1");
+		messageBot.sendKeys(Keys.RETURN);
+		
+		wait.withTimeout(10, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		
+		
+		WebElement chat = null;
+		
+		int attempts = 10;
+		while(attempts-- >0)
+		{	
+			try{
+			     chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+				
+			}
+			catch(org.openqa.selenium.StaleElementReferenceException ex)
+			{
+			    chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+				
+			}
+		
+		}
+		
+		//check if we get last message
+		assertNotNull(chat);
+		
+		
+		//Failure message
+		String msg = "Sorry, I couldn't locate that file!";
+		
+		//Reply from bot
+		String rep = chat.getText();
+		
+		// check if the reply from bot contain the failure message
+		boolean val = rep.indexOf(msg)!=-1;
+		assertTrue(val);
+		
+	}
+	
+	
+	@Test
+	public void invalid_command() throws Exception
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 30);	
+		
+		// get recent commits
+		WebElement messageBot = driver.findElement(By.id("message-input"));
+		messageBot.sendKeys("file file1 to");
+		messageBot.sendKeys(Keys.RETURN);
+		
+		wait.withTimeout(10, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		
+		
+		WebElement chat = null;
+		
+		int attempts = 10;
+		while(attempts-- >0)
+		{	
+			try{
+			     chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+				
+			}
+			catch(org.openqa.selenium.StaleElementReferenceException ex)
+			{
+			    chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+				
+			}
+		
+		}
+		
+		//check if we get last message
+		assertNotNull(chat);		
+		
+		//Failure message
+		String msg = "Invalid command format!";
+		
+		//Reply from bot
+		String rep = chat.getText();
+		
+		// check if the reply from bot contains the failure message
+		boolean val = rep.indexOf(msg)!=-1;
+		assertTrue(val);
+		
+	}
+	
+
+	
+	@Test
+	public void fetch_url_valid() throws Exception
+	{
+		
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		
+		//go to testing channel
 		driver.get("https://seteamhq.slack.com/messages/testing");
 		wait.until(ExpectedConditions.titleContains("testing"));
 
+		// Type something to be sent
+		WebElement messageBot = driver.findElement(By.id("message-input"));
+		
+		//fetch repository details
+		
+		messageBot.sendKeys("fetch https://github.com/test/Hello-World");
+		messageBot.sendKeys(Keys.RETURN);
+		
+		wait.withTimeout(4, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		
+
+		WebElement chat = null;
+		
+		
+		// Get last message body. We try it no of times as we get StaleElementReferenceException
+		int attempts = 10;
+		while(attempts -- >0)
+		{	
+			try{
+			     chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));			
+			}
+			catch(org.openqa.selenium.StaleElementReferenceException ex)
+			{
+			    chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+			}
+		
+		}
+		
+		//check if we get last message
+		assertNotNull(chat);
+		
+		//Success messages
+		String msg = "Fetching successfully completed!";
+		//String msg[] = {"Fetching commit history from the repo","Fetching successfully completed!"};
+		
+		//Reply from bot
+		String rep = chat.getText();
+		
+		// check if the reply from bot contains the success message
+		//boolean val = rep.indexOf(msg[0])!=-1 || rep.indexOf(msg[1])!=-1;
+		boolean val = rep.indexOf(msg)!=-1 ;
+		assertTrue(val);	
+	
+	}
+	
+	@Test
+	public void valid_recent_commit() throws Exception
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 30);	
+		
 		// get recent commits
 		WebElement messageBot = driver.findElement(By.id("message-input"));
-		messageBot.sendKeys("file file1 recent 2");
+		messageBot.sendKeys("file readme recent 1");
 		messageBot.sendKeys(Keys.RETURN);
 		
 		wait.withTimeout(10, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
@@ -149,27 +298,34 @@ public class BotTest
 			}
 		
 		}
-		 // check if reply is null
+		
+		//check if we get last message
 		assertNotNull(chat);
 		
+		//Failure message
 		String msg = "Sorry, I couldn't locate that file!";
-		String rep = chat.getText();
-		boolean val = rep.indexOf(msg)==-1;
 		
+		//Reply from bot
+		String rep = chat.getText();
+		
+		// check if the reply from bot does not contain the failure message
+		boolean val = rep.indexOf(msg)==-1;
 		assertTrue(val);
 		
+		// split multiple lines reply. Last n-2 lines will be committer details
 		String reps[] = rep.split("\n");
 		int n = reps.length;	
 		
-		String repbot[] = {"snswamy@ncsu.edu: Wed Oct 19 2016 22:49:58 GMT-0400 (EDT)","siddoshi93@gmail.com: Wed Oct 19 2016 22:46:30 GMT-0400 (EDT)"};		
-	
-		System.out.println(rep);
-		//check if number is equal to number of committers required
+		// desired output
+		String repbot[] = {"support@github.com: Thu Apr 14 2011 12:00:49 GMT-0400 (EDT)"};	
+		
+		//check if last n-2 lines are k committers required
 		assertTrue(n-2==repbot.length);
 		
 		int i=0;
 		while(i<repbot.length)
 		{
+			// check if actual ouput of committer details is equal to real output of committer details
 			val = reps[i+2].indexOf(repbot[i])!=-1;
 			assertTrue(val);
 			i++;
@@ -178,20 +334,18 @@ public class BotTest
 	}
 	
 	
-	
-
 	@Test
-	public void top_commit() throws Exception
+	public void valid_top_commit() throws Exception
 	{
-		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebDriverWait wait = new WebDriverWait(driver, 30);	
 		
-		
-		// Type something
+		// get recent commits
 		WebElement messageBot = driver.findElement(By.id("message-input"));
-		messageBot.sendKeys("file file1 top 2");
+		messageBot.sendKeys("file readme top 1");
 		messageBot.sendKeys(Keys.RETURN);
 		
 		wait.withTimeout(10, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		
 		
 		WebElement chat = null;
 		
@@ -210,34 +364,101 @@ public class BotTest
 		
 		}
 		
-		
+		//check if we get last message
 		assertNotNull(chat);
 		
+		
+		//Failure message
 		String msg = "Sorry, I couldn't locate that file!";
+		
+		//Reply from bot
 		String rep = chat.getText();
+		
+		// check if the reply from bot does not contain the failure message
 		boolean val = rep.indexOf(msg)==-1;
-		System.out.println(rep);
 		assertTrue(val);
 		
+		// split multiple lines reply. Last n-2 lines will be committer details
 		String reps[] = rep.split("\n");
-		int n = reps.length;	 
+		int n = reps.length;	
 		
-		String repbot[] = {"siddoshi93@gmail.com: 2 commits","snswamy@ncsu.edu: 1 commits"};
+		// desired output
+		String repbot[] = {"support@github.com: 1 commits"};
 		
-		System.out.println(n);
 		
-		//check if number is equal to number of committers required
+		//check if last n-2 lines are k committers required
 		assertTrue(n-2==repbot.length);
 		
 		int i=0;
 		while(i<repbot.length)
 		{
-
+			// check if actual ouput of committer details is equal to real output of committer details
 			val = reps[i+2].indexOf(repbot[i])!=-1;
 			assertTrue(val);
 			i++;
 		}
+		
 	}
 	
 
+	
+	@Test
+	public void valid_organization_count() throws Exception
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 30);	
+		
+		// get recent commits
+		WebElement messageBot = driver.findElement(By.id("message-input"));
+		messageBot.sendKeys("orgContributors readme");
+		messageBot.sendKeys(Keys.RETURN);
+		wait.withTimeout(10, TimeUnit.SECONDS).ignoring(StaleElementReferenceException.class);
+		WebElement chat = null;
+
+		int attempts = 10;
+		while(attempts-- >0)
+		{	
+			try{
+			     chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+				
+			}
+			catch(org.openqa.selenium.StaleElementReferenceException ex)
+			{
+			    chat = driver.findElement(By.xpath("(//div[@class='message_content '])[last()]/span[@class='message_body']"));
+				
+			}
+		
+		}
+		
+		//check if we get last message
+		assertNotNull(chat);
+		
+		//Failure message
+		String msg = "Sorry, I couldn't locate that file!";
+		
+		//Reply from bot
+		String rep = chat.getText();
+		
+		// check if the reply from bot does not contain the failure message
+		boolean val = rep.indexOf(msg)==-1;
+		assertTrue(val);
+		
+		// split multiple lines reply. 
+		String reps[] = rep.split("\n");
+		int n = reps.length;	
+		
+		// desired output
+		String repbot[] = {"Company :NCSU count 1"};
+			
+		//check if last n lines are n organizations 
+		assertTrue(n==repbot.length);
+		
+		int i=0;
+		while(i<repbot.length)
+		{
+			// check if actual ouput of committer details is equal to real output of committer details
+			val = reps[i].indexOf(repbot[i])!=-1;
+			assertTrue(val);
+			i++;
+		}
+	}	
 }
