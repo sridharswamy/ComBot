@@ -11,8 +11,8 @@ var Promise = require('bluebird');
 var parse = require('parse-link-header');
 var jsonReader = require('jsonfile');
 var nock = require('nock');
-let functions=require('./functions.js');
-let mocking=require('./mocking.js');
+let functions = require('./functions.js');
+let mocking = require('./mocking.js');
 let parser = require('./parser.js');
 
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
@@ -26,7 +26,6 @@ var githubapi = nock("https://api.github.com")
 class Bot {
 
 	constructor(opts) {
-		console.log(functions);
 		let slackToken = opts.token;
 		let autoReconnect = opts.autoReconnect || true;
 		let autoMark = opts.autoMark || true;
@@ -61,22 +60,22 @@ class Bot {
   	}
 
 	messageHandler(message) {
-		// CALL THIS FUNCTION ONLY FOR MOCKING ELSE COMMENT IT
+		// Call this function only for mocking. To be commented out otherwise.
 		mocking.mock();
 		let messageSender = this.slack.dataStore.getUserById(message.user);
 
-		if(messageSender && messageSender.is_bot){
+		if(messageSender && messageSender.is_bot) {
 		   return;
 		}
 
 		let channel = this.slack.dataStore.getChannelGroupOrDMById(message.channel);
-		if(message.text) {
-		    let msgText=message.text;
-		    if(/(hello|hi|hey) (bot|sridharbot)/g.test(msgText)) {
+		if (message.text) {
+		    let msgText = message.text;
+		    if (/(hello|hi|hey) (bot|sridharbot)/g.test(msgText)) {
 		      this.slack.sendMessage('Hello to you too, ' + messageSender.name + '! How can I help you?\n I understand the following commands: \n 1. *fetch* [GitHub repository link] \n 2. *file* [Filename] [recent/top] [number] \n 3. *orgContributors* [Filename]', channel.id);
 		    }
 
-		    else if(/fetch/g.test(msgText)) {
+		    else if (/fetch/g.test(msgText)) {
 			    let dm = this.slack.dataStore.getDMByName(messageSender.name);
 		        var re = /fetch <((https|http)\:\/\/)?((www.)?(github.com)){1}\/([\w+._]+)\/([\w+-._]+)>/g;
 
@@ -84,38 +83,32 @@ class Bot {
 			    var repoName = "";
 				var username = "";
 				if(match != null) {
-				  username = match[6];
-				  repoName = match[7];
-				  this.slack.sendMessage("Fetching commit history from the repo *"+repoName+"*. I will notify you as soon as I'm done!", channel.id);
-					var users=[];
+					username = match[6];
+					repoName = match[7];
+					this.slack.sendMessage("Fetching commit history from the repo *"+repoName+"*. I will notify you as soon as I'm done!", channel.id);
+					var users = [];
 					functions.getUsers(username,repoName).then(function (obj) {
-						for( var i in obj)
-						{
+						for(var i in obj) {
 							var name = obj[i].login;
 							users.push(name);
 						} 
 						return users;
-					}).then(function(users){
-						Promise.map(users,function(user){
-							functions.getCompany(user).then(function(company){
-								if(company){
+					}).then(function(users) {
+						Promise.map(users,function(user) {
+							functions.getCompany(user).then(function(company) {
+								if(company) {
 									companyMappings[user]=company;
 								}
 							});
 						});
 					});
 
-					//var repocommits = githubapi.get('/repos/' + username + '/' + repoName + '/commits')
-					//	.reply(200, JSON.stringify(data));
-					//var commitresponse = githubapi.get('/repos/' + username + '/' + repoName + '/commits/' + sha)
-					//		.reply(200, JSON.stringify(data1));
-
 					var listOfCommits = [];
 					var finalresponse=[];
 					functions.getCommits(username, repoName, listOfCommits).then(function (shaList) {
-						Promise.map(shaList,function(sha){
+						Promise.map(shaList,function(sha) {
 							return functions.callRequest(username,repoName,sha)
-						}).then(function(finalresponse){
+						}).then(function(finalresponse) {
 							parser.responseParser(finalresponse,function(response){
 								fileMappings = response;
 							});
@@ -150,35 +143,31 @@ class Bot {
 				}
 			}
 			
-			else if(/orgContributors/g.test(msgText)){
-				if(Object.keys(fileMappings).length === 0) {
+			else if (/orgContributors/g.test(msgText)) {
+				if (Object.keys(fileMappings).length === 0) {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
 				else {
 					var values = msgText.split(" ");
 					var fileName = values[1];
-					console.log(values[1]);
-					var companyContributionsCount={};
+					var companyContributionsCount = {};
 
-					if(fileMappings[fileName]){
-						var fileObj=fileMappings[fileName];
-						for(var user_email in fileObj.committerCounts){
-							var count=fileObj.committerCounts[user_email];
-							var username=fileObj.emailToUserName[user_email];
-							var company=companyMappings[username];
-							if(!companyContributionsCount[company]){
-								companyContributionsCount[company]=0;
+					if(fileMappings[fileName]) {
+						var fileObj = fileMappings[fileName];
+						for(var user_email in fileObj.committerCounts) {
+							var count = fileObj.committerCounts[user_email];
+							var username = fileObj.emailToUserName[user_email];
+							var company = companyMappings[username];
+							if(!companyContributionsCount[company]) {
+								companyContributionsCount[company] = 0;
 							}
 							companyContributionsCount[company]+=count;
-							console.log("username"+username+" "+"company"+company+" "+count);
 						}
-						console.log("Company mappings"+companyMappings);
-						console.log(companyContributionsCount);
-						var resultstring="";
-						for(var company in companyContributionsCount){
-							resultstring=resultstring+"Company :"+company+" count "+companyContributionsCount[company]+"\n";
+						var result = "";
+						for(var company in companyContributionsCount) {
+							result = result + "Company :" + company + " count " + companyContributionsCount[company] + "\n";
 						}
-						this.slack.sendMessage(resultstring,channel.id);
+						this.slack.sendMessage(result, channel.id);
 					}
 					else {
 						this.slack.sendMessage("Sorry, I couldn't locate that file!",channel.id);

@@ -2,15 +2,13 @@
 
 const PriorityQueue = require('priorityqueue');
 
-//global variable should be used
-//var emailToUserName={};
 
 class File {
 	constructor(name) {
 	  this.name = name;
 	  this.committerCounts = {};
 	  this.committerTimes = {};
-	  this.emailToUserName={};
+	  this.emailToUserName = {};
 	}
 
 	// Returns the name of the file
@@ -21,7 +19,7 @@ class File {
 	// Returns the user who have contributed to the file and their commit counts
 	getCommitSummary(command, count) {
 		var summary = "";
-		if(command=="top"){
+		if(command == "top") {
 			summary = this.getTopNCommitters(count);
 		}
 		else {
@@ -34,13 +32,13 @@ class File {
 	addCommit(committer, commitTime, committer_username) {
 		this.addCommitter(committer);
 		this.addCommitTime(committer, commitTime);
-		if(!this.emailToUserName[committer]){
-			this.emailToUserName[committer]=committer_username;
+		if(!this.emailToUserName[committer]) {
+			this.emailToUserName[committer] = committer_username;
 		}
 	}
 
 	// Adds committer details to the file commit list
-	addCommitter(committer){
+	addCommitter(committer) {
 		if(!(committer in this.committerCounts))
 			this.committerCounts[committer] = 1;
 		else
@@ -68,12 +66,12 @@ class File {
      		a.commits !== b.commits ? a.commits - b.commits : a.name - b.name
 		});
 
-		for(var i in this.committerCounts){
+		for(var i in this.committerCounts) {
 			pq.push(new UserCommitCount(i, this.committerCounts[i]));
 		}
 
 		var j = 0;
-		while(pq.top() != undefined && j < n){
+		while(pq.top() != undefined && j < n) {
 			var user = pq.pop();
 			result += user.name + ': ' + user.commits +' commits \n';
 			j++;
@@ -92,19 +90,18 @@ class File {
      		a.commitTime !== b.commitTime ? a.commitTime - b.commitTime : a.name - b.name
 		});
 
-		for(var i in this.committerTimes){
+		for(var i in this.committerTimes) {
 			pq.push(new UserCommitTime(i, this.committerTimes[i]));
 		}
 
 		var j = 0;
-		while(pq.top()!= undefined && j < n){
+		while(pq.top()!= undefined && j < n) {
 			var user = pq.pop();
 			result += user.name + ': ' + new Date(user.commitTime) + '\n';
 			j++;
 		}
 		return result;
 	}
-
 }
 
 
@@ -122,30 +119,5 @@ class UserCommitTime {
 		this.commitTime = commitTime;
 	}
 }
-
-/*
-var v1 = new File('Bot.js');
-var v2 = new File('File.js');
-
-v1.addCommit('Sridhar','2016-10-06T17:23:12Z');
-v1.addCommit('Sridhar','2016-10-08T17:26:33Z');
-
-v1.addCommit('Akshay','2016-10-02T16:30:07Z');
-v1.addCommit('Akshay','2016-10-02T17:45:49Z');
-v1.addCommit('Akshay','2016-10-04T18:50:46Z');
-v1.addCommit('Akshay','2016-10-05T19:30:33Z');
-v1.addCommit('Akshay','2016-10-06T20:02:42Z');
-v1.addCommit('Akshay','2016-10-11T23:10:12Z');
-v1.addCommit('Akshay','2016-10-11T22:00:09Z');
-
-v1.addCommit('Siddhant','2016-10-11T16:50:29Z');
-
-v1.addCommit('Akash','2016-10-06T22:45:49Z');
-v1.addCommit('Akash','2016-10-10T23:11:49Z');
-
-v1.getTopNCommitters(4);
-v1.getRecentNCommitters(4);
-*/
-
 
 module.exports = File;

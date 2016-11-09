@@ -6,7 +6,7 @@ var urlRoot = "https://api.github.com";
 
 function getCommits(userName, repoName, lisOfCommits)
 {	
-	var shaList=[]
+	var shaList = []
     var options = {
 	    url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits',
 	    method: 'GET',
@@ -21,8 +21,7 @@ function getCommits(userName, repoName, lisOfCommits)
 	 	request(options, function (error, response, body) 
 	  	{
 		    var obj = JSON.parse(body);
-		    for(var i = 0; i < obj.length; i++)
-		    {
+		    for(var i = 0; i < obj.length; i++) {
 		  	    var sha = obj[i].sha;
                 shaList.push(sha);
 			}
@@ -44,7 +43,6 @@ function callRequest( userName, repoName,sha) {
 	};
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
-			//console.log("BODY"+body);
 			var commitObj = JSON.parse(body);
 		    resolve(commitObj);
   		});
@@ -61,11 +59,10 @@ function getUsers(userName,repoName){
 			          "Authorization": githubToken
 			       }
 	};
-	//console.log(urlRoot + '/repos/' + userName + '/' + repoName + '/contributors');
+
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
 			var commitObj = JSON.parse(body);
-			//console.log(commitObj);
 		    resolve(commitObj);
   		});
   	});
@@ -83,12 +80,9 @@ function getCompany(userName){
 			          "Authorization": githubToken
 			       }
 	};
-	console.log(urlRoot + '/users/' + userName);
   	return new Promise(function (resolve, reject) {
 		request(commitOptions, function (error, response, body) {
-			//console.log("BODY"+body);
 			var commitObj = JSON.parse(body);
-			//console.log(commitObj);
 		    resolve(commitObj.company);
   		});
   	});

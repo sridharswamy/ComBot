@@ -14,7 +14,6 @@ const redis = require('redis');
 const client = redis.createClient();
 
 // Initializing Github connection
-
 let Bot = require('./bot');
 
 const bot = new Bot({
@@ -24,9 +23,9 @@ const bot = new Bot({
 });
 
 client.on('error',(err)=>{
-	console.log('Error'+err);
+	console.log('Error ' +err);
 });
 
 client.on('connect',()=>{
-	console.log('Connected to Redis');
+	console.log('Connected to Redis!');
 });
