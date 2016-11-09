@@ -9,9 +9,10 @@ var request = require('request');
 var fs = require("fs");
 var Promise = require('bluebird');
 var parse = require('parse-link-header');
-let functions = require('./functions.js');
-let mocking = require('./mocking.js');
-let parser = require('./parser.js');
+let functions = require('./lib/functions.js');
+let mocking = require('./mock/mocking.js');
+let parser = require('./lib/parser.js');
+
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
 var urlRoot = "https://api.github.com";
 var fileMappings = {};
@@ -150,11 +151,11 @@ class Bot {
 							if(!companyContributionsCount[company]) {
 								companyContributionsCount[company] = 0;
 							}
-							companyContributionsCount[company]+=count;
+							companyContributionsCount[company] += count;
 						}
-						var result = "";
+						var result = "The following are company-wise contributions for " + filename + " \n";
 						for(var company in companyContributionsCount) {
-							result = result + "Company :" + company + " count " + companyContributionsCount[company] + "\n";
+							result = result + company + ": " + companyContributionsCount[company] + "\n";
 						}
 						this.slack.sendMessage(result, channel.id);
 					}
