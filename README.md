@@ -7,8 +7,8 @@
 `cd redis-stable`  
 `make`   
 2) Run the redis server a another terminal with the command `redis-server`.   
-3) Open a new terminal and export the GitHub and Slack API tokens.   
-export GITHUB_API_TOKEN= 'Enter Github API token here without quotes'   
-export SLACK_API_TOKEN='Enter Slack API token here without quotes'   
-4) Run `node index.js`
+3) Open a new terminal and export the GitHub and Slack API tokens.    
+`export GITHUB_API_TOKEN= 'Enter Github API token here without quotes'`          
+`export SLACK_API_TOKEN='Enter Slack API token here without quotes'`       
+4) Run `node index.js`  
 5) Add 'ComBot' to your Slack channel.
