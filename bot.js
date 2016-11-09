@@ -9,19 +9,13 @@ var request = require('request');
 var fs = require("fs");
 var Promise = require('bluebird');
 var parse = require('parse-link-header');
-var jsonReader = require('jsonfile');
-var nock = require('nock');
 let functions = require('./functions.js');
 let mocking = require('./mocking.js');
 let parser = require('./parser.js');
-
 var githubToken = "token " + process.env.GITHUB_API_TOKEN;
-var userId = "akshaynayak";
 var urlRoot = "https://api.github.com";
 var fileMappings = {};
 var companyMappings = {};
-
-var githubapi = nock("https://api.github.com")
 
 class Bot {
 
@@ -49,9 +43,6 @@ class Bot {
 				+ rtmStartData.team.name + ' but not yet connected to a channel!');
 		});
 
-
-		this.keywords = new Map();
-
 		this.slack.on(RTM_EVENTS.MESSAGE,(message)=>{
 		  this.messageHandler(message);
 		});
@@ -60,8 +51,8 @@ class Bot {
   	}
 
 	messageHandler(message) {
-		// Call this function only for mocking. To be commented out otherwise.
-		mocking.mock();
+		//Call this function only for mocking. To be commented out otherwise.
+		//mocking.mock();
 		let messageSender = this.slack.dataStore.getUserById(message.user);
 
 		if(messageSender && messageSender.is_bot) {
@@ -78,7 +69,6 @@ class Bot {
 		    else if (/fetch/g.test(msgText)) {
 			    let dm = this.slack.dataStore.getDMByName(messageSender.name);
 		        var re = /fetch <((https|http)\:\/\/)?((www.)?(github.com)){1}\/([\w+._]+)\/([\w+-._]+)>/g;
-
 	  		    var match = re.exec(msgText);
 			    var repoName = "";
 				var username = "";
@@ -151,7 +141,6 @@ class Bot {
 					var values = msgText.split(" ");
 					var fileName = values[1];
 					var companyContributionsCount = {};
-
 					if(fileMappings[fileName]) {
 						var fileObj = fileMappings[fileName];
 						for(var user_email in fileObj.committerCounts) {

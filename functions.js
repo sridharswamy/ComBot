@@ -31,7 +31,6 @@ function getCommits(userName, repoName, lisOfCommits)
 }
 
 function callRequest( userName, repoName,sha) {
-  // Send a http request to url and specify a callback that will be called upon its return.
 		  var commitOptions = {
 			        url: urlRoot + '/repos/' + userName + '/' + repoName + '/commits/' + sha,
 			        method: 'GET',
