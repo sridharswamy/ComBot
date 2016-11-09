@@ -153,7 +153,7 @@ class Bot {
 							}
 							companyContributionsCount[company] += count;
 						}
-						var result = "The following are company-wise contributions for " + filename + " \n";
+						var result = "The following are company-wise contributions for " + fileName + " \n";
 						for(var company in companyContributionsCount) {
 							result = result + company + ": " + companyContributionsCount[company] + "\n";
 						}
