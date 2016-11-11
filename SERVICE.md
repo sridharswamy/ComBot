@@ -1,5 +1,7 @@
 # ComBot
 
+**NOTE for TAs: We had completed the implementation of the Service phase before itself. Hence, there isn't much commit activity during this phase. We have updated the task tracking sheet accordingly.**
+
 It is a slack bot that discovers relationships between source codes and developers by mining GitHub repositories. It uses repository contributions for creating file-to-developer mappings & facilitates quick communication via Slack.
 
 The users can greet the bot by sending a message like `hi bot` on which the bot will respond with the set of command it supports.   
