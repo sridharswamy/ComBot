@@ -1,3 +1,5 @@
+####NOTE for TAs: We had completed the implementation of the Service phase before itself. Hence, there isn't much commit activity during this phase. We have updated the task tracking sheet accordingly.
+
 ##Bot Setup
 
 ###Prerequisites:
