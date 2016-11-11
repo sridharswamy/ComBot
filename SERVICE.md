@@ -66,4 +66,4 @@ Following this message, the users can begin querying the repository for one or m
 | Refactoring | Complete | Reorganized the code structure
 
 ## Screencast
-[Slack Bot Screencast - SERVICE phase](https://youtu.be/M0Cck8CmSz4)
+[Slack Bot Screencast - SERVICE phase](https://www.youtube.com/watch?v=QTGtxBDctDI&feature=youtu.be)
