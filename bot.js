@@ -69,7 +69,7 @@ class Bot {
 
 		    else if (/fetch/g.test(msgText)) {
 			    let dm = this.slack.dataStore.getDMByName(messageSender.name);
-		        var re = /fetch <((https|http)\:\/\/)?((www.)?(github.com)){1}\/([\w+._]+)\/([\w+-._]+)>/g;
+		        var re = /fetch\s+<((https|http)\:\/\/)?((www.)?(github.com)){1}\/([\w+._]+)\/([\w+-._]+)>/g;
 	  		    var match = re.exec(msgText);
 			    var repoName = "";
 				var username = "";
@@ -117,7 +117,7 @@ class Bot {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
 				else {
-					var values = msgText.split(" ");
+					var values = msgText.split(/\s+/);
 					if(values.length != 4) {
 						this.slack.sendMessage("Invalid command format!", channel.id);
 						return;
@@ -139,7 +139,7 @@ class Bot {
 					this.slack.sendMessage("You need to fetch a repository first!", channel.id);
 				}
 				else {
-					var values = msgText.split(" ");
+					var values = msgText.split(/\s+/);
 					var fileName = values[1];
 					var companyContributionsCount = {};
 					if(fileMappings[fileName]) {
