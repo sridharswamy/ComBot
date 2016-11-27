@@ -1,0 +1,20 @@
+  - name: Provision an EC2 node
+    hosts: local
+    connection: local
+    gather_facts: False
+    tags: provisioning
+    vars:
+      instance_type: t2.micro
+      security_group: sg_thingy
+      image: ami-a9d276c9
+      region: us-west-2
+      keypair: SEKeyPair
+    tasks:
+      - name: Launch new Instance
+        local_action: ec2 instance_tags="Name=AnsibleTest" group={{ security_group }} instance_type={{ instance_type}} image={{ image }} wait=true region={{ region }} keypair={{ keypair }}
+        register: ec2
+      - debug: var=ec2.instances[0].public_ip
+      - name: Add instance to local host group
+        local_action: lineinfile dest=hosts regexp="{{ ec2.instances[0].public_dns_name }}" insertafter="[launched]" line="{{ ec2.instances[0].public_dns_name }} ansible_ssh_private_key_file=~/.ssh/{{ keypair }}.pem" state=present
+      - name: Wait for SSH to come up
+        local_action: wait_for host={{ ec2.instances[0].public_dns_name }} port=22 delay=60 timeout=320 state=started
