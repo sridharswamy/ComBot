@@ -1,0 +1,42 @@
+- hosts: all
+  become: yes 
+  environment:
+    GITHUB_API_TOKEN:
+    SLACK_API_TOKEN:
+  tasks:
+    - name: Install npm,nodejs,git
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+       - npm
+       - nodejs-legacy
+       - git
+
+    - name: Update npm
+      npm: name=npm state=latest global=yes
+
+    - name: Install n
+      npm:  name=n global=yes
+
+    - name: Update nodejs
+      command: n stable
+      
+    - name: Install forever
+      npm: name=forever state=latest global=yes
+
+    - name: Clone github repository
+      git: repo=https://github.com/sridharswamy/ComBot dest=/home/ubuntu/ComBot accept_hostkey=yes
+
+    - name: Install npm packages
+      npm: path=/home/ubuntu/ComBot
+
+    - name: Ensure Redis is present
+      apt: pkg=redis-server state=latest
+
+    - name: Ensure Redis is started
+      service: name=redis-server state=started enabled=yes
+    
+    - name: Install forever
+      npm: name=forever state=latest global=yes
+    
+    - name: Run Bot
+      command: forever start index.js  chdir=/home/ubuntu/ComBot
