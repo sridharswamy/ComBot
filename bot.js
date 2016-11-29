@@ -118,7 +118,7 @@ class Bot {
 				}
 				else {
 					var values = msgText.split(/\s+/);
-					if(values.length != 4) {
+					if(values.length != 4 || values[2]!="top" || values[2]!="recent" || isNaN(values[3])) {
 						this.slack.sendMessage("Invalid command format!", channel.id);
 						return;
 					}
