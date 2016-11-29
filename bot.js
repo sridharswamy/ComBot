@@ -63,7 +63,8 @@ class Bot {
 		let channel = this.slack.dataStore.getChannelGroupOrDMById(message.channel);
 		if (message.text) {
 		    let msgText = message.text;
-		    if (/(hello|hi|hey) (bot|sridharbot)/g.test(msgText)) {
+		    let msgTextLower = msgText.toLowerCase();
+		    if (/(hello|hi|hey) (bot|combot)/g.test(msgTextLower)) {
 		      this.slack.sendMessage('Hello to you too, ' + messageSender.name + '! How can I help you?\n I understand the following commands: \n 1. *fetch* [GitHub repository link] \n 2. *file* [Filename] [recent/top] [number] \n 3. *orgContributors* [Filename]', channel.id);
 		    }
 
