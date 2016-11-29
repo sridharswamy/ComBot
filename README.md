@@ -49,6 +49,16 @@ export ANSIBLE_HOST_KEY_CHECKING=False
       SLACK_API_TOKEN: <Your Slack API Token>
 ```
 
+Also be sure that you correctly assign values to the variables
+```
+vars:
+      instance_type: <Instance type>
+      security_group: <Security group you created>
+      image: <Image>
+      region: <Region>
+      keypair: <Name of key file downloaded from AWS>
+```
+
 5) Create a new file ```hosts``` in the same directory of ```deploy.yml``` on your machine as
 
 ```
