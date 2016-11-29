@@ -1,8 +1,8 @@
 - hosts: all
   become: yes 
   environment:
-    GITHUB_API_TOKEN: <Github token>
-    SLACK_API_TOKEN: <Slack token>
+    GITHUB_API_TOKEN: c5cce7c14fe0e1959d83e87cb5e2288649821f57
+    SLACK_API_TOKEN: xoxb-86201011139-2wafWvNLjExGsKJqpo5oWgcI
   tasks:
     - name: Install npm,nodejs,git
       apt: name={{ item }} update_cache=yes state=latest
@@ -10,23 +10,33 @@
        - npm
        - nodejs-legacy
        - git
+
     - name: Update npm
-      command: npm install npm@latest -g
-    
+      npm: name=npm state=latest global=yes
+
+    - name: Install n
+      npm:  name=n global=yes
+
+    - name: Update nodejs
+      command: n stable
+      
+    - name: Install forever
+      npm: name=forever state=latest global=yes
+
     - name: Clone github repository
-      git: repo=https://github.com/sridharswamy/ComBot dest=/home/vagrant/ComBot accept_hostkey=yes
+      git: repo=https://github.com/sridharswamy/ComBot dest=/home/ubuntu/ComBot accept_hostkey=yes
 
     - name: Install npm packages
-      npm: path=/home/vagrant/ComBot
+      npm: path=/home/ubuntu/ComBot
 
     - name: Ensure Redis is present
       apt: pkg=redis-server state=latest
 
     - name: Ensure Redis is started
       service: name=redis-server state=started enabled=yes
+    
     - name: Install forever
       npm: name=forever state=latest global=yes
     
     - name: Run Bot
-      command: forever start index.js  chdir=/home/vagrant/ComBot
-
+      command: forever start index.js  chdir=/home/ubuntu/ComBot
