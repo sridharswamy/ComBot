@@ -1,8 +1,8 @@
 - hosts: all
   become: yes 
   environment:
-    GITHUB_API_TOKEN: c5cce7c14fe0e1959d83e87cb5e2288649821f57
-    SLACK_API_TOKEN: xoxb-86201011139-2wafWvNLjExGsKJqpo5oWgcI
+    GITHUB_API_TOKEN: ""
+    SLACK_API_TOKEN: ""
   tasks:
     - name: Install npm,nodejs,git
       apt: name={{ item }} update_cache=yes state=latest
