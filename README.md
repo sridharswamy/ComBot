@@ -41,7 +41,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 
 3) Download the ```deployment/deploy.yml``` 
 
-4) Open ```deploy.yml``` and update GITHUB_API_TOKEN and SLACK_API_TOKEN in 
+4) Open ```deploy.yml``` and update ```GITHUB_API_TOKEN``` and ```SLACK_API_TOKEN``` in 
 
 ```
     environment:
