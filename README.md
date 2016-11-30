@@ -149,3 +149,9 @@ Example usages:
 | Deliverable |	Item/Status	| Issues/Tasks
 | ------------- | ------------  |  ------------
 | Configure EC2 instance	| Complete	| Generating scripts for handling npm and nodejs versions
+
+
+##Note
+<b> 1) If the user has edited a file through the Github editor on the webpage instead of pushing it to the repository through the command line, the email id associated with that commit is 'noreply@github.com'. In such a scenario, the committer's actual email address cannot be obtained through the API call made for that specific commit.   
+2) If the committer is not associated with any organization/company, the value for it is set to 'undefined'.
+</b>
