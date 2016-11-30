@@ -81,3 +81,49 @@ ansible-playbook -i hosts deploy.yml --skip-tags ec2provisioning
 
 
 Following is the screencast for Deployment https://youtu.be/ceo18id6RDI
+
+## Instructions for Acceptance Testing
+
+####List of commands (Preconditions + Use Cases)
+1) <b> hi bot </b>    
+This command is used to view the set of commands that are supported by the bot.   
+Example usages:    
+1) HI BOT    
+2) hi bot    
+
+2) <b> fetch &lt;github repository link&gt; </b>    
+This command is used to fetch the contents of the repository you wish to query.    
+Example usages:    
+1) fetch https://github.com/sridharswamy/ComBot    
+2) fetch http://github.com/sridharswamy/ComBot
+
+======
+###Commands for use cases
+<b> Use case 1 </b>    
+<b> file &lt;filename&gt; top &lt;n&gt; </b>    
+This command will retrieve the top n contributors to a file based on the number of commits.     
+Example usages:     
+  1) file bot.js top 3    
+  2) file lib/functions.js top 2
+
+<b> Use case 2 </b>    
+<b> file &lt;filename&gt; recent &lt;n&gt; </b>   
+This command will retrieve the recent n contributors to a file based on the commit times.    
+Example usages:     
+  1) file bot.js recent 3    
+  2) file lib/functions.js recent 2
+
+<b> Use case 3 </b>    
+<b> orgContributors &lt;filename&gt; </b>    
+This command will fetch the contributions by various organizations to the file in descending order. (Useful in open-source projects)      
+Example usages:     
+  1) orgContributors bot.js      
+  2) orgContributors lib/functions.js
+  
+  
+### Example of a possible flow
+1. hi bot
+2. fetch https://github.com/sridharswamy/ComBot
+3. file bot.js top 3
+4. file index.js recent 3
+5. orgContributors README.md
