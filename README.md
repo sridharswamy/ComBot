@@ -127,3 +127,25 @@ Example usages:
 3. file bot.js top 3
 4. file index.js recent 3
 5. orgContributors README.md
+
+
+## Task Tracking
+
+##### Week 1
+| Deliverable	| Item/Status	| Issues/Tasks
+| ------------- | ------------  |  ------------
+| Use Case Testing |	Complete	|Testing against non-static github repositories
+| Acceptance Testing| 	In Progress	|Verifying result correctness
+|	Bug found 	| Limit for commits | 30
+		
+#####Week 2
+| Deliverable	|Item/Status	|Issues/Tasks
+| ------------- | ------------  |  ------------
+| Acceptance Testing 	Complete	|Fixed issue
+| Provision EC2 instance	Complete |	Automating instance provision with Ansible
+| Configure EC2 instance	| In Progress	| Incompatible Node js and Npm versions
+		
+#####Week 3
+| Deliverable |	Item/Status	| Issues/Tasks
+| ------------- | ------------  |  ------------
+| Configure EC2 instance	| Complete	| Generating scripts for handling npm and nodejs versions
