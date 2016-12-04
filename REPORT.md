@@ -47,16 +47,6 @@ https://www.youtube.com/watch?v=A8UoKyfEHxI
 Working on this project was a great experience as it gave us a good hands-on experience with the various stages in the SDLC. We also gained a good understanding of working with Node.JS, Slack and GitHub APIs. Each of us worked concurrently on some feature in each phase and put together our work in the end, except in the deployment phase. In the deployment phase, we adopted a different approach to accomplish the task assigned to us. All of us sat together to solve the problem as none of us had any experience in performing a complete project setup including deployment on an EC2 instance. Throughout the project, we focused on getting the basic functionality implemented first, and thereafter tried to polish our work in further iterations by handling edge cases, adding additional functionality, etc. Overall, it was a challenging yet rewarding experience, and we are glad that we could accomplish the project successfully.
 
 ###Limitations and future work
-
-1) Currently, we are considering only the contributions to the default branch. As a part of future work, we can consider contributions to all the branches within the repository while calculating statistics. 
-
-2) We can implement a “send mail” feature which would allow the slack user to send an email to the github users found for help.
-
-3) One more limitation is that the github api is not scalable enough. At present we can fetch github repositories having less than 100 commits. To support github repositories having large number of commits, we have to make use of concept of pagination in Github API.
-
-
-
-
-
-
-
+1. We are considering only the contributions to the default branch. As a part of future work, we can consider contributions to all the branches within the repository while calculating statistics. 
+2. Currently, we are providing email IDs of the contributors. We can later improve on this and provide the Slack handle of those contributors to improve ease-of-use. 
+3. The GitHub API is quite restrictive in terms of the number of commits we can fetch per API call. To support GitHub repositories having a large number of commits, we have to make multiple API calls. As a result, the users may have to wait for some time before they can start querying.
