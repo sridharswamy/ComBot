@@ -44,7 +44,7 @@ https://www.youtube.com/watch?v=A8UoKyfEHxI
 
 ###Reflection on the development process and project
 
-To do
+Working on this project was a great experience as it gave us a good hands-on experience with the various stages in the SDLC. We also gained a good understanding of working with Node.JS, Slack and GitHub APIs. Each of us worked concurrently on some feature in each phase and put together our work in the end, except in the deployment phase. In the deployment phase, we adopted a different approach to accomplish the task assigned to us. All of us sat together to solve the problem as none of us had any experience in performing a complete project setup including deployment on an EC2 instance. Throughout the project, we focused on getting the basic functionality implemented first, and thereafter tried to polish our work in further iterations by handling edge cases, adding additional functionality, etc. Overall, it was a challenging yet rewarding experience, and we are glad that we could accomplish the project successfully.
 
 ###Limitations and future work
 
